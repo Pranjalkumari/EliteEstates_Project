@@ -47,7 +47,14 @@ export const login = async (req,res)=>{
 
         //GENERATE COOKIE TOKEN AND SEND TO THE USER IF PASSWORD CORRECT
 
-        res.setHeader("Set-Cookie","test="+"myValue").json("success");
+        //res.setHeader("Set-Cookie","test="+"myValue").json("success");
+
+        const age = 1000*60*60*24*7;
+        res.cookie("test2","myValue2",{
+            httpOnly:true,
+            //secure:true, ->cant do as of now as we're using localhost but make true in production mode
+            maxAge: age,
+        }).status(200).json({message: "Login Successful!"});
 
     }catch(err){
         console.log(err);
