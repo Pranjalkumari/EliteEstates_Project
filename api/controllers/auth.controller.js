@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma.js";
 
 export const register = async (req,res)=>{
@@ -49,8 +50,16 @@ export const login = async (req,res)=>{
 
         //res.setHeader("Set-Cookie","test="+"myValue").json("success");
 
-        const age = 1000*60*60*24*7;
-        res.cookie("test2","myValue2",{
+        const age = 1000*60*60*24*7;  //1 week
+
+        const token = jwt.sign({
+            id: user.id,
+        },
+        process.env.JWT_SECRET_KEY,
+        {expiresIn: age} //after one week we wont be able to use this token as it will expire
+    );
+
+        res.cookie("token",token,{
             httpOnly:true,
             //secure:true, ->cant do as of now as we're using localhost but make true in production mode
             maxAge: age,
@@ -62,5 +71,5 @@ export const login = async (req,res)=>{
     }
 }
 export const logout = (req,res)=>{
-    //db operations
+    res.clearCookie("token").status(200).json({message:"Logout Successful"});
 }
