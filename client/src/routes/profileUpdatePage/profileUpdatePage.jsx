@@ -65,7 +65,7 @@ function ProfileUpdatePage() {
         </form>
       </div>
       <div className="sideContainer">
-        <img src={avatar || currentUser.avatar || "/noavatar.jpg"} alt="" className="avatar" />
+        <img src={avatar || "/noavatar.jpg"} alt="" className="avatar" />
         <UploadWidget
           uwConfig={{
             cloudName: "dbb34odpe",
@@ -74,7 +74,7 @@ function ProfileUpdatePage() {
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setState={setAvatar}
+          setAvatar={setAvatar}
         />
       </div>
     </div>
