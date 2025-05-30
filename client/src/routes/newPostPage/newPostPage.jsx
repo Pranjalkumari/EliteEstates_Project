@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./newPostPage.scss";
-// import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 
 function NewPostPage() {
@@ -28,7 +28,7 @@ function NewPostPage() {
             <div className="item description">
               <label htmlFor="desc">Description</label>
               
-               {/* <ReactQuill theme ="snow" onChange={setValue} value ={value}/> */}
+               <ReactQuill theme ="snow" onChange={setValue} value ={value}/>
             </div>
             <div className="item">
               <label htmlFor="city">City</label>
