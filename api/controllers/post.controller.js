@@ -1,8 +1,21 @@
  import prisma from "../lib/prisma.js";
 
  export const getPosts = async(req, res) =>{
-    try {
-        const posts = await prisma.post.findMany()
+    const query = req.query;
+    
+     try {
+    const posts = await prisma.post.findMany({
+      where: {
+        city: query.city || undefined,
+        type: query.type || undefined,
+        property: query.property || undefined,
+        bedroom: parseInt(query.bedroom) || undefined,
+        price: {
+          gte: parseInt(query.minPrice) || undefined,
+          lte: parseInt(query.maxPrice) || undefined,
+        },
+      },
+    });
         res.status(200).json(posts)
     } catch (err) {
         console.log(err)
@@ -11,21 +24,23 @@
  }
 
 
- export const getPost  = async(req, res) =>{
-    const id = req.params.id
-    try {
-        const post = await prisma.post.findUnique({
-            where:{id},
-            include:{
-                postDetail:true,
-                user:{
-                    select:{
-                        username:true,
-                        avatar:true
-                    }
-                }
-            }
-        })
+ export const getPost = async (req, res) => {
+  const id = req.params.id;
+  console.log("Backend received ID:", id);
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: {
+        postDetail: true,
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    });
         res.status(200).json(post)
     } catch (err) {
         console.log(err)
