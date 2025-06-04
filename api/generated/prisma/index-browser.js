@@ -149,6 +149,13 @@ exports.Prisma.PostDetailScalarFieldEnum = {
   postId: 'postId'
 };
 
+exports.Prisma.SavedPostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId',
+  createAt: 'createAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -173,7 +180,8 @@ exports.Property = exports.$Enums.Property = {
 exports.Prisma.ModelName = {
   User: 'User',
   Post: 'Post',
-  PostDetail: 'PostDetail'
+  PostDetail: 'PostDetail',
+  SavedPost: 'SavedPost'
 };
 
 /**
