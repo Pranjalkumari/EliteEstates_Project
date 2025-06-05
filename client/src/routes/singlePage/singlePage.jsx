@@ -8,7 +8,9 @@ import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 
 function SinglePage() {
-  const post = useLoaderData();
+
+
+  const post = useLoaderData(); 
   const [saved, setSaved] = useState(post.isSaved);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ function SinglePage() {
     }
     // AFTER REACT 19 UPDATE TO USEOPTIMISTIK HOOK
     setSaved((prev) => !prev);
-    try {
+    try { 
       await apiRequest.post("/users/save", { postId: post.id });
     } catch (err) {
       console.log(err);
