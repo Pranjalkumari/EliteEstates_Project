@@ -110,15 +110,6 @@ Prisma.NullTypes = {
  * Enums
  */
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  username: 'username',
-  password: 'password',
-  avatar: 'avatar',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -156,6 +147,32 @@ exports.Prisma.SavedPostScalarFieldEnum = {
   createAt: 'createAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  username: 'username',
+  password: 'password',
+  avatar: 'avatar',
+  createdAt: 'createdAt',
+  chatIDs: 'chatIDs'
+};
+
+exports.Prisma.ChatScalarFieldEnum = {
+  id: 'id',
+  userIDs: 'userIDs',
+  createdAt: 'createdAt',
+  seenBy: 'seenBy',
+  lastMessage: 'lastMessage'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  userId: 'userId',
+  chatId: 'chatId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -178,10 +195,12 @@ exports.Property = exports.$Enums.Property = {
 };
 
 exports.Prisma.ModelName = {
-  User: 'User',
   Post: 'Post',
   PostDetail: 'PostDetail',
-  SavedPost: 'SavedPost'
+  SavedPost: 'SavedPost',
+  User: 'User',
+  Chat: 'Chat',
+  Message: 'Message'
 };
 
 /**
