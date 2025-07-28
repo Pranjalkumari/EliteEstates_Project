@@ -7,7 +7,7 @@ import {verifyToken} from "../middleware/verifyToken.js"
 
 const router = express.Router();
 
-router.get("/", verifyToken,addMessage);
+router.post("/:chatId", verifyToken,addMessage);
 
 
 export default router; 

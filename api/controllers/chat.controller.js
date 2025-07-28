@@ -11,6 +11,22 @@ export const getChats = async (req, res) => {
         },
       },
     });
+
+    for(const chat of chats){
+ const reveiverId = chat.userIDs.find((id)=>id!== tokenUserId);
+ const receiver = await prisma.user.findUnique({
+    where:{
+        id:reveiverId,
+    },
+    select:{
+        id:true,
+        username:true,
+        avatar:true,
+    },
+
+ });
+ chat.receiver = receiver;
+    }
     res.status(200).json(chats);
   } catch (err) {
     console.log(err);
@@ -70,10 +86,27 @@ export const addChat = async (req,res)=>{
     }
 };
 
+
+
 export const readChat = async (req,res)=>{
+    const tokenUserId = req.chatId;
     try{
+
+         const chat = await prisma.chat.update({
+            where:{
+                id: req.params.id,
+                userIDs:{
+                    hasSome:[tokenUserId],
+                }
+            },
+            data:{
+                seenBy:{
+                     push:[tokenUserId],
+                }
+            }
+         })
      
-        res.status(200).json(users);
+        res.status(200).json(chat);
     }catch(err){
         console.log(err);
         res.status(500).json({message:"Failed to read Chats!"})
