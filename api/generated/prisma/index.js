@@ -186,7 +186,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\pranjal kumari\\Desktop\\EliteEstates_Project\\EliteEstates_Project\\api\\generated\\prisma",
+      "value": "/Users/pranjalkumari/IdeaProjects/untitled/EliteEstates_Project/api/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -195,17 +195,20 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "darwin-arm64"
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\pranjal kumari\\Desktop\\EliteEstates_Project\\EliteEstates_Project\\api\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/pranjalkumari/IdeaProjects/untitled/EliteEstates_Project/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.6.0",
@@ -223,8 +226,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id         String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  title      String\n  price      Int\n  images     String[]\n  address    String\n  city       String\n  bedroom    Int\n  bathroom   Int\n  latitude   String\n  longitude  String\n  type       Type\n  property   Property\n  createAt   DateTime    @default(now())\n  user       User        @relation(fields: [userId], references: [id])\n  userId     String      @db.ObjectId\n  postDetail PostDetail?\n  savedPosts SavedPost[]\n}\n\nenum Type {\n  rent\n  buy\n}\n\nenum Property {\n  apartment\n  house\n  condo\n  land\n}\n\nmodel PostDetail {\n  id         String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  desc       String\n  utilities  String?\n  pet        String?\n  income     String?\n  size       Int?\n  school     Int?\n  bus        Int?\n  restaurant Int?\n  post       Post    @relation(fields: [postId], references: [id])\n  postId     String  @unique @db.ObjectId\n}\n\nmodel SavedPost {\n  id       String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user     User     @relation(fields: [userId], references: [id])\n  post     Post     @relation(fields: [postId], references: [id])\n  userId   String   @unique @db.ObjectId\n  postId   String   @unique @db.ObjectId\n  createAt DateTime @default(now())\n\n  @@unique([userId, postId])\n}\n\nmodel User {\n  id         String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  email      String      @unique\n  username   String      @unique\n  password   String\n  avatar     String?\n  createdAt  DateTime    @default(now())\n  posts      Post[]\n  savedPosts SavedPost[]\n  chats      Chat[]      @relation(fields: [chatIDs], references: [id])\n  chatIDs    String[]    @db.ObjectId\n}\n\nmodel Chat {\n  id          String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  users       User[]    @relation(fields: [userIDs], references: [id])\n  userIDs     String[]  @db.ObjectId\n  createdAt   DateTime  @default(now())\n  seenBy      String[]  @db.ObjectId\n  messages    Message[]\n  lastMessage String?\n}\n\nmodel Message {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  text      String\n  userId    String\n  chat      Chat     @relation(fields: [chatId], references: [id])\n  chatId    String   @db.ObjectId\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "fcbcfafebc8baa612848a3a380bc91ecab0b25d3ccabda36abd6f19037bdced5",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../generated/prisma\"\n  binaryTargets = [\"native\", \"darwin-arm64\"]\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Post {\n  id         String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  title      String\n  price      Int\n  images     String[]\n  address    String\n  city       String\n  bedroom    Int\n  bathroom   Int\n  latitude   String\n  longitude  String\n  type       Type\n  property   Property\n  createAt   DateTime    @default(now())\n  user       User        @relation(fields: [userId], references: [id])\n  userId     String      @db.ObjectId\n  postDetail PostDetail?\n  savedPosts SavedPost[]\n}\n\nenum Type {\n  rent\n  buy\n}\n\nenum Property {\n  apartment\n  house\n  condo\n  land\n}\n\nmodel PostDetail {\n  id         String  @id @default(auto()) @map(\"_id\") @db.ObjectId\n  desc       String\n  utilities  String?\n  pet        String?\n  income     String?\n  size       Int?\n  school     Int?\n  bus        Int?\n  restaurant Int?\n  post       Post    @relation(fields: [postId], references: [id])\n  postId     String  @unique @db.ObjectId\n}\n\nmodel SavedPost {\n  id       String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  user     User     @relation(fields: [userId], references: [id])\n  post     Post     @relation(fields: [postId], references: [id])\n  userId   String   @unique @db.ObjectId\n  postId   String   @unique @db.ObjectId\n  createAt DateTime @default(now())\n\n  @@unique([userId, postId])\n}\n\nmodel User {\n  id         String      @id @default(auto()) @map(\"_id\") @db.ObjectId\n  email      String      @unique\n  username   String      @unique\n  password   String\n  avatar     String?\n  createdAt  DateTime    @default(now())\n  posts      Post[]\n  savedPosts SavedPost[]\n  chats      Chat[]      @relation(fields: [chatIDs], references: [id])\n  chatIDs    String[]    @db.ObjectId\n}\n\nmodel Chat {\n  id          String    @id @default(auto()) @map(\"_id\") @db.ObjectId\n  users       User[]    @relation(fields: [userIDs], references: [id])\n  userIDs     String[]  @db.ObjectId\n  createdAt   DateTime  @default(now())\n  seenBy      String[]  @db.ObjectId\n  messages    Message[]\n  lastMessage String?\n}\n\nmodel Message {\n  id        String   @id @default(auto()) @map(\"_id\") @db.ObjectId\n  text      String\n  userId    String\n  chat      Chat     @relation(fields: [chatId], references: [id])\n  chatId    String   @db.ObjectId\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "7b4db8c1816a6306f7da06aa941c601ee97ccc3cd46f14a2206299e809d99c21",
   "copyEngine": true
 }
 
@@ -263,8 +266,8 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+path.join(process.cwd(), "generated/prisma/libquery_engine-darwin-arm64.dylib.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/prisma/schema.prisma")
