@@ -1,42 +1,82 @@
-import {Server} from "socket.io";
+import http from "http";
+import { Server } from "socket.io";
 
-const io = new Server({
-    cors:{
-        origin :"http://localhost:5173"
+const PORT = 5000;
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+
+// userId -> socketId
+const onlineUsers = new Map();
+
+const addUser = (userId, socketId) => {
+  if (!userId) return;
+  onlineUsers.set(String(userId), socketId);
+};
+
+const removeUser = (socketId) => {
+  for (const [userId, currentSocketId] of onlineUsers.entries()) {
+    if (currentSocketId === socketId) {
+      onlineUsers.delete(userId);
+      break;
     }
-});
-
-let onlineUser =[];
-
-const addUser = (userId, socketId) =>{
-const userExits = onlineUser.find((user)=> user.userId === userId);
- if(!userExits){
-    onlineUser.push({userId, socketId});
- }
+  }
 };
 
-const removeUser = (socketId)=>{
-    onlineUser = onlineUser.filter((user)=> user.socketId !== socketId);
-
+const getUserSocket = (userId) => {
+  if (!userId) return null;
+  return onlineUsers.get(String(userId)) || null;
 };
 
-const getUser = (userId)=>{
-    return onlineUser.find((user)=> user.userId);
-}
-io.on("connection", (socket)=>{
-     socket.on("newUser", (userId)=>{
-        addUser(userId, socket.id);
-     });
+const server = http.createServer((req, res) => {
+  const url = new URL(req.url || "/", `http://${req.headers.host}`);
 
-//on - to listen rec, handle emitted event
-    socket.on("sendMessage", ({receiverId, data})=>{
-          const receiver = getUser(receiverId);
-          io.to(receiver.socketId).emit("getMessage", data);
-          
-    })
-     socket.on("disconnect", ()=>{
-         removeUser(socket.id);
-     })
+  if (req.method === "GET" && url.pathname === "/health") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname.startsWith("/online/")) {
+    const userId = decodeURIComponent(url.pathname.replace("/online/", ""));
+    const isOnline = Boolean(getUserSocket(userId));
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ userId, online: isOnline }));
+    return;
+  }
+
+  res.writeHead(404, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ message: "Not Found" }));
 });
 
-io.listen("5000")
+const io = new Server(server, {
+  cors: {
+    origin: CLIENT_URL,
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("newUser", (userId) => {
+    addUser(userId, socket.id);
+  });
+
+  socket.on("isUserOnline", (userId, cb) => {
+    const online = Boolean(getUserSocket(userId));
+    if (typeof cb === "function") {
+      cb({ userId, online });
+    }
+  });
+
+  socket.on("sendMessage", ({ receiverId, data }) => {
+    const receiverSocketId = getUserSocket(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("getMessage", data);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
+
+server.listen(PORT, () => {
+  console.log(`Socket server running on ${PORT}`);
+});
