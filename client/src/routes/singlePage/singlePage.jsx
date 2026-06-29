@@ -6,18 +6,20 @@ import DOMPurify from "dompurify";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import Chat from "../../components/chat/Chat";
 
 function SinglePage() {
 
 
   const post = useLoaderData(); 
   const [saved, setSaved] = useState(post.isSaved);
+  const [chat, setChat] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSave = async () => {
     if (!currentUser) {
-      navigate("/login");
+      return navigate("/login");
     }
     // AFTER REACT 19 UPDATE TO USEOPTIMISTIK HOOK
     setSaved((prev) => !prev);
@@ -26,6 +28,21 @@ function SinglePage() {
     } catch (err) {
       console.log(err);
       setSaved((prev) => !prev);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!currentUser) {
+      return navigate("/login");
+    }
+    try {
+      // Create or fetch existing chat with the post owner
+      const res = await apiRequest.post("/chats", {
+        receiverId: post.userId,
+      });
+      setChat([{ ...res.data, receiver: post.user }]);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -141,7 +158,7 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
+            <button onClick={handleSendMessage}>
               <img src="/chat.png" alt="" />
               Send a Message
             </button>
@@ -155,6 +172,7 @@ function SinglePage() {
               {saved ? "Place Saved" : "Save the Place"}
             </button>
           </div>
+          {chat && <Chat chats={chat} />}
         </div>
       </div>
     </div>

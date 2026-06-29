@@ -12,6 +12,9 @@ import Login from "./routes/login/login";
 import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage"
  import NewPostPage from "./routes/newPostPage/newPostPage";
+import AboutPage from "./routes/aboutPage/aboutPage";
+import AgentsPage from "./routes/agentsPage/agentsPage";
+import ContactPage from "./routes/contactPage/contactPage";
 import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loaders";
 
 function App() {
@@ -30,9 +33,21 @@ function App() {
           loader: listPageLoader,
         },
         {
-          path:"/:id",
+          path:"/post/:id",
           element:<SinglePage/>,
           loader: singlePageLoader,
+        },
+        {
+          path:"/about",
+          element:<AboutPage/>
+        },
+        {
+          path:"/agents",
+          element:<AgentsPage/>
+        },
+        {
+          path:"/contact",
+          element:<ContactPage/>
         },
 
         {

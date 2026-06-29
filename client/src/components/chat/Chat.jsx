@@ -20,9 +20,6 @@ function Chat({chats}) {
   const handleOpenChat = async (id, receiver)=>{
     try{
       const res = await apiRequest("/chats/"+ id);
-      if(!res.data.seenBy.includes(currentUser.id)){
-        decrease();
-      }
       setChat({...res.data,receiver});
 
     }catch(err){
@@ -39,15 +36,27 @@ function Chat({chats}) {
     if(!text)return;
     try {
       const res = await apiRequest.post("/messages/"+chat.id,{text});
-      setChat((prev)=>({...prev, messages:[...prev.messages, res.data]}));
+      const newUserMessage = res.data?.userMessage || res.data;
+      const newAiMessage = res.data?.aiMessage || null;
+
+      setChat((prev)=>({
+        ...prev,
+        messages:[
+          ...prev.messages,
+          ...(newUserMessage ? [newUserMessage] : []),
+          ...(newAiMessage ? [newAiMessage] : []),
+        ],
+      }));
       e.target.reset();
   
 
       //emit use to send event between client and server
-      socket.emit("sendMessage", {
-        receiverId: chat.receiver.id,
-        data:res.data,
-      });
+      if (!newAiMessage) {
+        socket?.emit("sendMessage", {
+          receiverId: chat.receiver.id,
+          data:newUserMessage,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -73,7 +82,7 @@ function Chat({chats}) {
         });
       }
       return ()=>{
-         socket.off("getMessage");
+         socket?.off("getMessage");
       };
   }, [chat, socket]);
   return (
